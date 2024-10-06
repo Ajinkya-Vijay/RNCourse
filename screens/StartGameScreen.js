@@ -1,6 +1,8 @@
-import { TextInput,StyleSheet, Alert, View } from "react-native";
+import { TextInput,StyleSheet, Alert, View, Text } from "react-native";
 import React, {useState} from 'react';
 import PrimaryButton from "../components/PrimaryButton";
+import Title from "../components/ui/Title";
+import Colors from "../constans/colors";
 
 function StartGameScreen({onPickNumber}){
     const [enteredNumber, setEnteredNumber] = useState('');
@@ -26,12 +28,16 @@ function StartGameScreen({onPickNumber}){
         onPickNumber(chosenNumber);
     }
 
-    return <View style={styles.inputContainer}>
+    return (
+        <View style={styles.rootContainer}>
+            <Title>Guess My Number</Title>
+    <View style={styles.inputContainer}>
+        <Text style={styles.instructionText}>Enter a Number</Text>
         <TextInput style={styles.numberInput} maxLength={2} 
-         autoCapitalize="none" keyboardType="number-pad"
-         autoCorrect={false}
-         onChangeText={numberInputHandler}
-         value={enteredNumber}/>
+        autoCapitalize="none" keyboardType="number-pad"
+        autoCorrect={false}
+        onChangeText={numberInputHandler}
+        value={enteredNumber}/>
         <View style={styles.buttonsContainer}>
             <View style={styles.buttonContainer}>
                 <PrimaryButton onPress={resetInputHandler}>Reset</PrimaryButton>
@@ -41,15 +47,28 @@ function StartGameScreen({onPickNumber}){
             </View>
         </View>
     </View>
+                
+    </View>
+    )
+    
 }
 
 export default StartGameScreen;
 
 const styles = StyleSheet.create({
+    rootContainer:{
+        flex:1,
+        marginTop:100,
+        alignItems:'center'
+    },
+    instructionText:{
+        color : '#ddb52f',
+        fontSize : 24
+    },
     inputContainer:{
         justifyContent:'center',
         alignItems:'center',
-        marginTop:100,
+        marginTop:20,
         marginHorizontal:24,
         padding:16,
         backgroundColor:'#4e0329',
@@ -65,7 +84,7 @@ const styles = StyleSheet.create({
         height :50,
         width:50,
         fontSize: 32,
-        borderBottomColor:'#4e0320',
+        borderBottomColor:'#ddb52f',
         borderBottomWidth:2,
         color:"#ddb52f",
         marginVertical:8,
