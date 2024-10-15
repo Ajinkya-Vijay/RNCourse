@@ -62,6 +62,7 @@ const styles = StyleSheet.create({
         alignItems:'center'
     },
     instructionText:{
+        fontFamily:'open-sans',
         color : '#ddb52f',
         fontSize : 24
     },

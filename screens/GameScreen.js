@@ -1,8 +1,11 @@
-import { View, Text, StyleSheet, onPress, Alert } from "react-native";
+import { View, Text, StyleSheet, onPress, Alert, FlatList } from "react-native";
 import Title from "../components/ui/Title";
 import {useState, useEffect} from 'react'
 import NumberContainer from "../components/game/NumberContainer";
 import PrimaryButton from "../components/PrimaryButton";
+import {Ionicons} from '@expo/vector-icons';
+import AntDesign from '@expo/vector-icons/AntDesign';
+import GuessLogItem from "../components/game/GuessLogItem";
 
 function generateRandomBetween(min, max, exclude){
     const rndNum = Math.floor(Math.random() * (max-min) + min)
@@ -22,7 +25,7 @@ function GameScreen({userNumber, onGameOver}) {
         1,
         100,
         userNumber);
-
+    const [guesRounds, setGuessRounds] = useState([intialGuess])
     const [currentGuess, setCurrentGuess] = useState(intialGuess);
 
     useEffect(()=>{
@@ -30,6 +33,11 @@ function GameScreen({userNumber, onGameOver}) {
             onGameOver();
         }
     },[currentGuess,userNumber,onGameOver])
+
+    useEffect(()=>{
+        minBoundary = 1;
+        maxBoundary = 100;
+    },[])
 
     function nextGuessHandler(direction){
         if(
@@ -48,7 +56,10 @@ function GameScreen({userNumber, onGameOver}) {
         }
         const newRndNumber = generateRandomBetween(minBoundary,maxBoundary, currentGuess)
         setCurrentGuess(newRndNumber)
+        setGuessRounds((prevGuessRounds)=> [newRndNumber,...prevGuessRounds])
     }
+
+    const guesRoundListLength = guesRounds.length;
 
   return (
     <View style={styles.screen}>
@@ -57,11 +68,23 @@ function GameScreen({userNumber, onGameOver}) {
         <View>
             <Text>Higher or Lower?</Text>
         <View>
-            <PrimaryButton onPress={nextGuessHandler.bind(this, 'lower')}>-</PrimaryButton>
-            <PrimaryButton onPress={nextGuessHandler.bind(this, 'higher')}>+</PrimaryButton>
+            <PrimaryButton onPress={nextGuessHandler.bind(this, 'lower')}>
+                <AntDesign name="minus" size={24} color="white" />
+            </PrimaryButton>
+            <PrimaryButton onPress={nextGuessHandler.bind(this, 'higher')}>
+                <Ionicons name="add" size={24} color="white"/>
+            </PrimaryButton>
         </View>
         </View>
       {/* LOG ROUNDS */}
+      <View>
+        {/* {guesRounds.map(guesRound=> <Text key={guesRound}>{guesRound}</Text>)} */}
+        <FlatList data={guesRounds}
+            keyExtractor={(item)=>item}
+            renderItem={(itemData)=>
+                <GuessLogItem roundNumber={guesRoundListLength - itemData.index} guess={itemData}/>}>   
+        </FlatList>
+      </View>
     </View>
   );
 }
